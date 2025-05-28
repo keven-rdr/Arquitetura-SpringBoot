@@ -35,7 +35,7 @@ Essa abordagem tem me motivado bastante a estudar com mais dedicação e foco.
 
 Você pode visualizar a documentação da API através do Swagger UI após iniciar o projeto:
 
-![Swagger UI Example](https://raw.githubusercontent.com/swagger-api/swagger-ui/master/docs/assets/logo.png)
+![Swagger UI](https://miro.medium.com/v2/resize:fit:828/format:webp/1*F1rD01GAS1dQcKXYjG_LdQ.png)
 
 ---
 
