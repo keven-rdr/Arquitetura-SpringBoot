@@ -31,13 +31,6 @@ Essa abordagem tem me motivado bastante a estudar com mais dedicação e foco.
 
 ---
 
-## 📸 Imagens (Swagger UI)
-
-Você pode visualizar a documentação da API através do Swagger UI após iniciar o projeto:
-
-![Swagger UI](https://miro.medium.com/v2/resize:fit:828/format:webp/1*F1rD01GAS1dQcKXYjG_LdQ.png)
-
----
 
 ## 🚀 Como Rodar o Projeto
 
