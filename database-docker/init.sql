@@ -1,0 +1,1 @@
+CREATE DATABASE ninja_spring_database;
