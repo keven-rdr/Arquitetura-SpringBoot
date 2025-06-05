@@ -1,12 +1,8 @@
 package dev.java10x.CadastroDeNinjas.entity.ninja;
 
-import dev.java10x.CadastroDeNinjas.entity.missions.Missions;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.Comment;
-
-import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -15,24 +11,27 @@ import java.time.LocalDate;
 public class Ninja {
 
     @Id
-    @Column(name = "id", nullable = false)
-    @Comment("Identificador Único")
-    private String id;
+    //IDENTITY para gerar o id automaticamente com numero
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false, length = 36)
+    private Long id;
 
     @Column(name = "name")
-    @Comment("Nome do Ninja")
-    private String name;
+    public String name;
 
     @Column(name = "email")
-    @Comment("Email do Ninja")
-    private String email;
+    public String email;
 
     @Column(name = "age")
-    @Comment("Idade do ninja")
-    private LocalDate age;
+    public int age;
 
-    @ManyToOne
-    private Missions missions;
+    public Ninja() {
+    }
 
+    public Ninja(String name, String email, int age) {
+        this.name = name;
+        this.email = email;
+        this.age = age;
+    }
 
 }

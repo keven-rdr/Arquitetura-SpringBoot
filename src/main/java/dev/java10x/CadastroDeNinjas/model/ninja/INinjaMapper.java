@@ -1,5 +1,6 @@
 package dev.java10x.CadastroDeNinjas.model.ninja;
 
+
 import dev.java10x.CadastroDeNinjas.entity.ninja.Ninja;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
