@@ -1,8 +1,11 @@
 package dev.java10x.CadastroDeNinjas.entity.ninja;
 
+import dev.java10x.CadastroDeNinjas.entity.missions.Missions;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -11,10 +14,8 @@ import lombok.Setter;
 public class Ninja {
 
     @Id
-    //IDENTITY para gerar o id automaticamente com numero
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false, length = 36)
-    private Long id;
+    @Column(name = "id", nullable = false)
+    private String id;
 
     @Column(name = "name")
     public String name;
@@ -23,15 +24,12 @@ public class Ninja {
     public String email;
 
     @Column(name = "age")
-    public int age;
+    public LocalDate age;
 
-    public Ninja() {
-    }
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "missions_id")
+    private Missions missions;
 
-    public Ninja(String name, String email, int age) {
-        this.name = name;
-        this.email = email;
-        this.age = age;
-    }
+
 
 }

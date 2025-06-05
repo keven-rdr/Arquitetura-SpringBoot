@@ -1,5 +1,6 @@
 package dev.java10x.CadastroDeNinjas.entity.missions;
 
+
 import dev.java10x.CadastroDeNinjas.entity.ninja.Ninja;
 import jakarta.persistence.*;
 import lombok.Getter;
