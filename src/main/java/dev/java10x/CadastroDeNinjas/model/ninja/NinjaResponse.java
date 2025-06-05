@@ -6,6 +6,7 @@ public record NinjaResponse(
         String id,
         String name,
         String email,
-        LocalDate age
+        LocalDate age,
+        String missions
 ) {
 }
