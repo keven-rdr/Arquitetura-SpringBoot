@@ -5,6 +5,7 @@ import dev.java10x.CadastroDeNinjas.model.ninja.NinjaRequest;
 import dev.java10x.CadastroDeNinjas.model.ninja.NinjaResponse;
 import dev.java10x.CadastroDeNinjas.service.ninja.NinjaService;
 import io.swagger.v3.oas.annotations.Operation;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,5 +31,25 @@ public class NinjaController {
     public List<NinjaResponse> getAll(){
         return service.getAll();
     }
+
+    @GetMapping("/{id}")
+    @Operation(description = "Busca o Ninja pelo Id")
+    @ResponseStatus(HttpStatus.OK)
+    public NinjaResponse getById(@PathVariable String id){
+        return service.getById(id);
+    }
+
+    @PutMapping("/{id}")
+    @Operation(description = "Alterar o Ninja")
+    public NinjaResponse update(@PathVariable String id, @RequestBody NinjaRequest request){
+        return service.update(id, request);
+    }
+
+    @DeleteMapping("/{id}")
+    @Operation(description = "Deletar um Ninja")
+    public void delete(@PathVariable String id){
+        service.delete(id);
+    }
+
 
 }

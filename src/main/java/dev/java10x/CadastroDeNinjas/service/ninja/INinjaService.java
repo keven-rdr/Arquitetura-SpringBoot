@@ -8,7 +8,13 @@ import java.util.List;
 public interface INinjaService {
     NinjaResponse create(NinjaRequest request);
 
+    NinjaResponse update(String id, NinjaRequest request);
+
     List<NinjaResponse> getAll();
+
+    NinjaResponse getById(String id);
+
+    void delete(String id);
 
 
 }

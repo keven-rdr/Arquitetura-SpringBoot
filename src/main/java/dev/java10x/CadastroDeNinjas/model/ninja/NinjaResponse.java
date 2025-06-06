@@ -1,5 +1,7 @@
 package dev.java10x.CadastroDeNinjas.model.ninja;
 
+import dev.java10x.CadastroDeNinjas.model.missions.MissionResponse;
+
 import java.time.LocalDate;
 
 public record NinjaResponse(
@@ -7,6 +9,6 @@ public record NinjaResponse(
         String name,
         String email,
         LocalDate age,
-        String missions
+        MissionResponse missions
 ) {
 }

@@ -13,7 +13,7 @@ public interface INinjaMapper {
     @Mapping(target = "missions", ignore = true)
     Ninja toEntity(NinjaRequest request);
 
-    @Mapping(target = "missions", source = "missions.name")
+    @Mapping(target = "missions", source = "missions")
     NinjaResponse toResponse(Ninja ninja);
 }
 
