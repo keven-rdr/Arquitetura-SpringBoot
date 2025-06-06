@@ -1,5 +1,6 @@
 package dev.java10x.CadastroDeNinjas.model.ninja;
 
+
 import dev.java10x.CadastroDeNinjas.entity.ninja.Ninja;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -12,7 +13,7 @@ public interface INinjaMapper {
     @Mapping(target = "missions", ignore = true)
     Ninja toEntity(NinjaRequest request);
 
-    @Mapping(target = "missions", source = "missions.name")
+    @Mapping(target = "missions", source = "missions")
     NinjaResponse toResponse(Ninja ninja);
 }
 

@@ -74,12 +74,6 @@
 			<version>${mapstruct.version}</version>
 		</dependency>
 
-		<!-- MapStruct processor (compile time) -->
-		<dependency>
-			<groupId>org.mapstruct</groupId>
-			<artifactId>mapstruct-processor</artifactId>
-			<version>${mapstruct.version}</version>
-		</dependency>
 
 		<!-- Spring Boot Test -->
 		<dependency>
