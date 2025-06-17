@@ -1,4 +1,4 @@
-# 🥷 Projeto API Ninja - Estudo de Documentação com Swagger
+# Projeto API SpringBoot - Estudo de Documentação com Swagger
 
 ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-6DB33F?logo=springboot&logoColor=white&style=for-the-badge)
 ![Maven](https://img.shields.io/badge/Maven-C71A36?logo=apachemaven&logoColor=white&style=for-the-badge)
