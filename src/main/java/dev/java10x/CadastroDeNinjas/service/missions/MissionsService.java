@@ -1,9 +1,11 @@
 package dev.java10x.CadastroDeNinjas.service.missions;
 
 import dev.java10x.CadastroDeNinjas.entity.missions.Missions;
+import dev.java10x.CadastroDeNinjas.entity.ninja.Ninja;
 import dev.java10x.CadastroDeNinjas.model.missions.IMissionMapper;
 import dev.java10x.CadastroDeNinjas.model.missions.MissionRequest;
 import dev.java10x.CadastroDeNinjas.model.missions.MissionResponse;
+import dev.java10x.CadastroDeNinjas.model.ninja.NinjaResponse;
 import dev.java10x.CadastroDeNinjas.repository.mission.MissionRepository;
 import dev.java10x.CadastroDeNinjas.repository.ninja.NinjaRepository;
 import org.springframework.stereotype.Service;
@@ -27,9 +29,23 @@ public class MissionsService implements IMissionService{
         this.ninjaRepository = ninjaRepository;
     }
 
-    public MissionResponse create(MissionRequest request){
-        Missions mission = mapper.toEntity(request);
+    public MissionResponse create(MissionRequest request) {
+        Missions mission = new Missions();
         mission.setId(UUID.randomUUID().toString());
+
+        // Define os campos se vierem preenchidos
+        mission.setName(request.name());
+        mission.setDifficultyMission(request.difficultyMission());
+        mission.setCompleted(request.completed());
+
+        // Define os ninjas, se houver
+        if (request.ninjas() != null && !request.ninjas().isEmpty()) {
+            List<String> ids = request.ninjas().stream()
+                    .map(Ninja::getId)
+                    .toList();
+            List<Ninja> ninjas = ninjaRepository.findAllById(ids);
+            mission.setNinja(ninjas);
+        }
 
         mission = repository.save(mission);
         return mapper.toResponse(mission);
@@ -65,33 +81,30 @@ public class MissionsService implements IMissionService{
             throw new RuntimeException("Missão com o ID informado não foi encontrada");
         }
 
-        // Recupera a missão existente do banco
         Missions existingMission = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Missão não encontrada"));
 
-        // Atualiza os campos básicos
-        existingMission.setName(request.name());
-        existingMission.setDifficultyMission(request.difficultyMission());
-        existingMission.setCompleted(request.completed());
-
-        // Atualiza os ninjas, se forem fornecidos
-        if (request.ninjas() != null && !request.ninjas().isEmpty()) {
-            List<Ninja> ninjas = ninjaRepository.findAllById(
-                    request.ninjas().stream()
-                            .map(NinjaResponse::id)
-                            .toList()
-            );
-            existingMission.setNinjas(ninjas);
+        // Atualiza apenas os campos informados
+        if (request.name() != null) {
+            existingMission.setName(request.name());
         }
 
-        // Salva a missão com as alterações
+        if (request.difficultyMission() != null) {
+            existingMission.setDifficultyMission(request.difficultyMission());
+        }
+
+        // `boolean` não aceita null, então apenas sobrescreve
+        existingMission.setCompleted(request.completed());
+
+        if (request.ninjas() != null && !request.ninjas().isEmpty()) {
+            List<String> ids = request.ninjas().stream()
+                    .map(Ninja::getId)
+                    .toList();
+            List<Ninja> ninjas = ninjaRepository.findAllById(ids);
+            existingMission.setNinja(ninjas);
+        }
+
         Missions updatedMission = repository.save(existingMission);
         return mapper.toResponse(updatedMission);
     }
-
-
-
-
-
-
 }

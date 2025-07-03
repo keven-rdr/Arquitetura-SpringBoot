@@ -34,16 +34,15 @@ public class NinjaService implements INinjaService {
 
     @Transactional(rollbackOn = Exception.class)
     public NinjaResponse create(NinjaRequest request) {
-        if (request == null || request.missions() == null || request.missions().isEmpty()) {
-            throw new RuntimeException("Missão deve ser informada");
-        }
-
-        var mission = missionRepository.findById(request.missions())
-                .orElseThrow(() -> new RuntimeException("Missão não encontrada"));
-
         Ninja ninja = mapper.toEntity(request);
         ninja.setId(UUID.randomUUID().toString());
-        ninja.setMissions(mission);
+
+        // Se veio missão, tenta associar
+        if (request.missions() != null && request.missions().id() != null) {
+            var mission = missionRepository.findById(request.missions().id())
+                    .orElseThrow(() -> new RuntimeException("Missão não encontrada"));
+            ninja.setMissions(mission);
+        }
 
         repository.save(ninja);
 
@@ -77,8 +76,9 @@ public class NinjaService implements INinjaService {
         Ninja ninja = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Ninja não encontrado"));
 
-        if (request.missions() != null && !request.missions().isEmpty()) {
-            var mission = missionRepository.findById(request.missions())
+        // Atualiza missão se tiver nova
+        if (request.missions() != null && request.missions().id() != null) {
+            var mission = missionRepository.findById(request.missions().id())
                     .orElseThrow(() -> new RuntimeException("Missão não encontrada"));
             ninja.setMissions(mission);
         }
@@ -91,7 +91,6 @@ public class NinjaService implements INinjaService {
 
         return mapper.toResponse(ninja);
     }
-
 
     public void delete(String id) {
         if (id == null || id.isEmpty()) {
