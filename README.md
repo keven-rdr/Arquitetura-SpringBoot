@@ -53,6 +53,10 @@ Essa abordagem tem me motivado bastante a estudar com mais dedicação e foco.
    ```
    http://localhost:8080/swagger-ui.html
    ```
+   ```
+   http://localhost:8080/swagger-ui/index.html
+   ```
+   
 
 ---
 - O projeto está em constante desenvolvimento.
