@@ -3,7 +3,9 @@
         xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
-                        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.29.xsd">
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
 
+    <!-- A ÚNICA RESPONSABILIDADE DO LIQUIBASE AGORA É GARANTIR QUE O SCHEMA EXISTA -->
+    <include file="db/migration/changes/001-create-ninja-schema.xml"/>
 
 </databaseChangeLog>

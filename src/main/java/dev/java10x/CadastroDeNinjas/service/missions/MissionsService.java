@@ -5,54 +5,43 @@ import dev.java10x.CadastroDeNinjas.entity.ninja.Ninja;
 import dev.java10x.CadastroDeNinjas.model.missions.IMissionMapper;
 import dev.java10x.CadastroDeNinjas.model.missions.MissionRequest;
 import dev.java10x.CadastroDeNinjas.model.missions.MissionResponse;
-import dev.java10x.CadastroDeNinjas.model.ninja.NinjaResponse;
+import dev.java10x.CadastroDeNinjas.model.ninja.NinjaSimpleResponse;
 import dev.java10x.CadastroDeNinjas.repository.mission.MissionRepository;
 import dev.java10x.CadastroDeNinjas.repository.ninja.NinjaRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
-public class MissionsService implements IMissionService{
+@RequiredArgsConstructor
+public class MissionsService implements IMissionService {
 
     private final MissionRepository repository;
     private final IMissionMapper mapper;
     private final NinjaRepository ninjaRepository;
 
-    public MissionsService(MissionRepository repository, IMissionMapper mapper, NinjaRepository ninjaRepository) {
-        this.repository = repository;
-        this.mapper = mapper;
-        this.ninjaRepository = ninjaRepository;
-    }
-
     public MissionResponse create(MissionRequest request) {
-        Missions mission = new Missions();
-        mission.setId(UUID.randomUUID().toString());
+        Missions mission = mapper.toEntity(request);
 
-        // Define os campos se vierem preenchidos
-        mission.setName(request.name());
-        mission.setDifficultyMission(request.difficultyMission());
-        mission.setCompleted(request.completed());
-
-        // Define os ninjas, se houver
+        // Processa ninjas se informados
         if (request.ninjas() != null && !request.ninjas().isEmpty()) {
-            List<String> ids = request.ninjas().stream()
-                    .map(Ninja::getId)
-                    .toList();
-            List<Ninja> ninjas = ninjaRepository.findAllById(ids);
-            mission.setNinja(ninjas);
+            List<Ninja> ninjas = findNinjasByIds(request.ninjas());
+
+            // Associa a missão aos ninjas (lado proprietário da relação)
+            Missions finalMission = mission;
+            ninjas.forEach(ninja -> ninja.setMissions(finalMission));
+            mission.setNinjas(ninjas);
         }
 
         mission = repository.save(mission);
         return mapper.toResponse(mission);
     }
 
-
-    public List<MissionResponse> getAll(){
+    public List<MissionResponse> getAll() {
         return repository.findAll().stream()
                 .map(mapper::toResponse)
                 .collect(Collectors.toList());
@@ -70,9 +59,9 @@ public class MissionsService implements IMissionService{
     }
 
     public void delete(String id) {
-       if (id == null || !repository.existsById(id)) {
-           throw new RuntimeException("ID não encontrado");
-       }
+        if (id == null || !repository.existsById(id)) {
+            throw new RuntimeException("ID não encontrado");
+        }
         repository.deleteById(id);
     }
 
@@ -93,18 +82,39 @@ public class MissionsService implements IMissionService{
             existingMission.setDifficultyMission(request.difficultyMission());
         }
 
-        // `boolean` não aceita null, então apenas sobrescreve
-        existingMission.setCompleted(request.completed());
+        // Agora completed pode ser null para updates parciais
+        if (request.completed() != null) {
+            existingMission.setCompleted(request.completed());
+        }
 
-        if (request.ninjas() != null && !request.ninjas().isEmpty()) {
-            List<String> ids = request.ninjas().stream()
-                    .map(Ninja::getId)
-                    .toList();
-            List<Ninja> ninjas = ninjaRepository.findAllById(ids);
-            existingMission.setNinja(ninjas);
+        // Atualiza ninjas se informados
+        if (request.ninjas() != null) {
+            // Remove associações antigas
+            if (existingMission.getNinjas() != null) {
+                existingMission.getNinjas().forEach(ninja -> ninja.setMissions(null));
+            }
+
+            // Adiciona novas associações
+            List<Ninja> ninjas = findNinjasByIds(request.ninjas());
+            ninjas.forEach(ninja -> ninja.setMissions(existingMission));
+            existingMission.setNinjas(ninjas);
         }
 
         Missions updatedMission = repository.save(existingMission);
         return mapper.toResponse(updatedMission);
+    }
+
+    private List<Ninja> findNinjasByIds(List<NinjaSimpleResponse> ninjaResponses) {
+        List<String> ninjaIds = ninjaResponses.stream()
+                .map(NinjaSimpleResponse::id)
+                .toList();
+
+        List<Ninja> foundNinjas = ninjaRepository.findAllById(ninjaIds);
+
+        if (foundNinjas.size() != ninjaIds.size()) {
+            throw new RuntimeException("Um ou mais ninjas com os IDs informados não foram encontrados.");
+        }
+
+        return foundNinjas;
     }
 }

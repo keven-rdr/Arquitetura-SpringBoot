@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.annotations.UuidGenerator;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -17,20 +18,22 @@ import java.time.LocalDateTime;
 public class Ninja {
 
     @Id
-    @Column(name = "id", nullable = false)
+    @GeneratedValue
+    @UuidGenerator
+    @Column(name = "id", updatable = false, nullable = false)
     private String id;
 
     @Column(name = "name")
-    public String name;
+    private String name;
 
     @Column(name = "email")
-    public String email;
+    private String email;
 
     @Column(name = "age")
-    public LocalDate age;
+    private LocalDate age;
 
     //cada ninja tem uma missao
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "missions_id")
     private Missions missions;
 
